@@ -89,8 +89,8 @@
 
 <svelte:window {onkeydown} />
 
-<div class="shell">
-	<header class="masthead">
+<header class="masthead">
+	<div class="masthead-inner">
 		<div class="brand">
 			{#if cfg.logo}<img class="logo" src={cfg.logo} alt="" />{/if}
 			<div class="titles">
@@ -130,8 +130,10 @@
 				{themeIcon}
 			</button>
 		</div>
-	</header>
+	</div>
+</header>
 
+<div class="shell">
 	<main>
 		{#if resultCount === 0}
 			<p class="empty">No services match “{query}”.</p>
@@ -177,32 +179,35 @@
 		padding-bottom: 3rem;
 	}
 
-	/* ---- masthead ---- */
+	/* ---- masthead: full-bleed sticky bar, content constrained ---- */
 	.masthead {
+		position: sticky;
+		top: 0;
+		z-index: 20;
+		width: 100%;
+		background: color-mix(in srgb, var(--bg) 80%, transparent);
+		backdrop-filter: blur(16px) saturate(1.4);
+		-webkit-backdrop-filter: blur(16px) saturate(1.4);
+		border-bottom: 1px solid var(--border);
+		box-shadow: 0 10px 30px -20px var(--shadow);
+	}
+	.masthead::after {
+		/* thin accent hairline spanning the whole width */
+		content: '';
+		position: absolute;
+		inset: auto 0 -1px;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, var(--glow), transparent);
+	}
+	.masthead-inner {
+		max-width: var(--maxw);
+		margin: 0 auto;
+		padding: 0.7rem clamp(1rem, 3vw, 2.2rem);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
 		flex-wrap: wrap;
-		margin-bottom: 2rem;
-		position: sticky;
-		top: 0;
-		z-index: 20;
-		padding: 0.7rem clamp(1rem, 3vw, 2.2rem);
-		margin: 0 calc(-1 * clamp(1rem, 3vw, 2.2rem)) 2rem;
-		background: color-mix(in srgb, var(--bg) 78%, transparent);
-		backdrop-filter: blur(16px) saturate(1.4);
-		-webkit-backdrop-filter: blur(16px) saturate(1.4);
-		border-bottom: 1px solid transparent;
-		transition: border-color 0.2s;
-	}
-	.masthead::after {
-		content: '';
-		position: absolute;
-		inset: auto 0 -1px;
-		height: 1px;
-		background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
-		opacity: 0.7;
 	}
 	.brand {
 		display: flex;
