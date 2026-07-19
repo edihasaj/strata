@@ -1,0 +1,9 @@
+node_modules
+.svelte-kit
+build
+.git
+.github
+*.log
+_shot.png
+static/logo-source.png
+README.md

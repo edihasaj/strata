@@ -1,0 +1,100 @@
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource-variable/inter';
+
+/* ---------- design tokens ---------- */
+:root {
+	--font-display: 'Space Grotesk Variable', system-ui, sans-serif;
+	--font-body: 'Inter Variable', system-ui, sans-serif;
+
+	--accent: #6ee7ff;
+	--accent2: #a78bfa;
+
+	--radius: 16px;
+	--radius-sm: 10px;
+	--maxw: 1240px;
+
+	--up: #34d399;
+	--down: #f87171;
+	--pending: #fbbf24;
+}
+
+/* dark (default) */
+:root,
+:root[data-theme='dark'] {
+	--bg: #0a0b0f;
+	--bg-elev: rgba(255, 255, 255, 0.04);
+	--bg-elev-2: rgba(255, 255, 255, 0.07);
+	--card: rgba(255, 255, 255, 0.045);
+	--card-hover: rgba(255, 255, 255, 0.08);
+	--border: rgba(255, 255, 255, 0.09);
+	--border-strong: rgba(255, 255, 255, 0.16);
+	--text: #eef1f6;
+	--text-dim: #9aa3b2;
+	--text-faint: #656e7e;
+	--shadow: rgba(0, 0, 0, 0.5);
+	--glow: color-mix(in srgb, var(--accent) 22%, transparent);
+	color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+	--bg: #f4f5f8;
+	--bg-elev: rgba(0, 0, 0, 0.03);
+	--bg-elev-2: rgba(0, 0, 0, 0.05);
+	--card: rgba(255, 255, 255, 0.9);
+	--card-hover: #ffffff;
+	--border: rgba(15, 20, 30, 0.09);
+	--border-strong: rgba(15, 20, 30, 0.16);
+	--text: #1a2030;
+	--text-dim: #55607a;
+	--text-faint: #8a93a6;
+	--shadow: rgba(20, 30, 50, 0.12);
+	--glow: color-mix(in srgb, var(--accent) 30%, transparent);
+	color-scheme: light;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	min-height: 100dvh;
+	font-family: var(--font-body);
+	color: var(--text);
+	background: var(--bg);
+	background-image:
+		radial-gradient(60rem 40rem at 12% -8%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
+		radial-gradient(52rem 40rem at 108% 4%, color-mix(in srgb, var(--accent2) 16%, transparent), transparent 55%);
+	background-attachment: fixed;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+::selection {
+	background: color-mix(in srgb, var(--accent) 40%, transparent);
+	color: var(--text);
+}
+
+*:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+	border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		transition-duration: 0.001ms !important;
+	}
+}

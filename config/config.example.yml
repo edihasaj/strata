@@ -1,0 +1,39 @@
+# Strata — example config. Copy to config.yml and edit.
+# Everything below is optional except each item's `name` + `url`.
+
+title: Homelab
+subtitle: self-hosted
+logo: /logo.png # any path served from static/, or an emoji
+footer: 'Made by <a href="https://example.com">you</a> · powered by <a href="https://github.com/edihasaj/strata">Strata</a>'
+
+theme:
+  accent: '#6ee7ff' # primary accent
+  accent2: '#a78bfa' # secondary accent (glows, gradients)
+  default: auto # auto | dark | light
+
+health:
+  interval: 15000 # ms between client status refreshes (min 5000)
+  timeout: 4000 # ms per server-side probe
+
+# Groups → items. `services:` is accepted as an alias for `groups:` so a Homer
+# config drops in with minimal edits.
+groups:
+  - name: Media
+    icon: '🎬' # emoji or a Font-Awesome-style label
+    items:
+      - name: Jellyfin
+        subtitle: Streaming
+        url: http://localhost:8096
+        icon: /icons/jellyfin.svg # image path, or an emoji
+        tags: [media, video] # searchable
+        preview: true # show the live-preview iframe button
+        # health: http://localhost:8096/health   # optional probe override
+
+  - name: System
+    icon: '🗄️'
+    items:
+      - name: Router
+        subtitle: Admin
+        url: http://192.168.1.1
+        icon: '🌐'
+        preview: false

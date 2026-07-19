@@ -1,0 +1,125 @@
+# Homelab dashboard config.
+# YAML-driven, drop-in-friendly with Homer (a `services:` block is accepted as an
+# alias for `groups:`). Edit this file and refresh — no rebuild needed.
+
+title: NAS
+subtitle: Hasaj
+logo: /logo.png
+footer: 'Made by <a href="https://edihasaj.com" target="_blank" rel="noopener">Edi Hasaj</a> · powered by <a href="https://github.com/edihasaj/strata" target="_blank" rel="noopener">Strata</a>'
+
+theme:
+  accent: '#6ee7ff' # electric cyan
+  accent2: '#a78bfa' # violet
+  default: auto # auto | dark | light
+
+# Health polling: the server pings each service's `health` (or `url`) and reports
+# up/down + latency. Set to 0 to disable.
+health:
+  interval: 15000 # ms between client refreshes
+  timeout: 4000 # ms per probe
+
+groups:
+  - name: Plex
+    icon: '🎬'
+    items:
+      - name: Plex Media Server
+        subtitle: Streaming
+        tags: [plex, media]
+        icon: /icons/plex.svg
+        url: http://nas6d6246:32400/web/index.html
+        health: http://nas6d6246:32400/identity
+        preview: true
+      - name: Seerr
+        subtitle: Requests
+        tags: [seerr, overseerr]
+        icon: /icons/overseerr.svg
+        url: http://nas6d6246:5055
+        preview: true
+      - name: Tautulli
+        subtitle: Statistics
+        tags: [tautulli, stats]
+        icon: /icons/tautulli.svg
+        url: http://nas6d6246:8181
+        preview: true
+
+  - name: Indexers
+    icon: '📡'
+    items:
+      - name: Sonarr
+        subtitle: TV Shows
+        tags: [sonarr, tv]
+        icon: /icons/sonarr.svg
+        url: http://nas6d6246:8989
+        preview: true
+      - name: Radarr
+        subtitle: Movies
+        tags: [radarr, movies]
+        icon: /icons/radarr.svg
+        url: http://nas6d6246:7878
+        preview: true
+      - name: Prowlarr
+        subtitle: Parent indexer
+        tags: [prowlarr]
+        icon: /icons/prowlarr.svg
+        url: http://nas6d6246:9696
+        preview: true
+      - name: Bazarr
+        subtitle: Subtitles
+        tags: [bazarr, subtitles]
+        icon: /icons/bazarr.svg
+        url: http://nas6d6246:6767
+        preview: true
+
+  - name: Downloaders
+    icon: '⬇️'
+    items:
+      - name: NZBGet
+        subtitle: Usenet client
+        tags: [nzbget, usenet]
+        icon: /icons/nzbget.png
+        url: http://nas6d6246:6789
+        preview: true
+      - name: Transmission
+        subtitle: Torrent client
+        tags: [transmission, torrent]
+        icon: /icons/transmission.svg
+        url: http://nas6d6246:9091
+        preview: true
+
+  - name: Home
+    icon: '🏠'
+    items:
+      - name: Home Assistant
+        subtitle: Automation
+        tags: [home-assistant, hass, automation]
+        icon: /icons/home-assistant.svg
+        url: http://nas6d6246:8123/
+        preview: true
+      - name: AdGuard Home
+        subtitle: DNS & ad-block
+        tags: [adguard, dns]
+        icon: /icons/adguard-home.svg
+        url: http://nas6d6246:3000
+        preview: true
+
+  - name: System
+    icon: '🗄️'
+    items:
+      - name: QNAP
+        subtitle: Control panel
+        tags: [qnap, nas]
+        icon: /icons/qnap.png
+        url: http://nas6d6246:8080
+        preview: false
+      - name: MovieMatch
+        subtitle: Find a match
+        tags: [moviematch]
+        icon: '🍿'
+        url: http://nas6d6246:8000
+        preview: true
+      - name: xTeVe
+        subtitle: IPTV tuner
+        tags: [xteve, iptv]
+        icon: /icons/xteve.png
+        url: http://nas6d6246:34400
+        preview: true

@@ -1,0 +1,17 @@
+services:
+  strata:
+    build: .
+    image: strata:latest
+    container_name: strata
+    # Host networking so the server-side health probes can reach services
+    # published on the host (avoids the bridge -> host published-port hairpin
+    # that some NAS boxes drop). The app then listens on ${PORT} on the host.
+    network_mode: host
+    environment:
+      HOST: 0.0.0.0
+      PORT: ${PORT:-8082}
+      CONFIG_PATH: /app/config/config.yml
+    volumes:
+      # Live config — edit and refresh the page, no rebuild needed.
+      - ./config/config.yml:/app/config/config.yml:ro
+    restart: unless-stopped
