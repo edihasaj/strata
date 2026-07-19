@@ -29,18 +29,21 @@ groups:
         url: http://nas6d6246:32400/web/index.html
         health: http://nas6d6246:32400/identity
         preview: true
+        livePreview: true
       - name: Seerr
         subtitle: Requests
         tags: [seerr, overseerr]
         icon: /icons/overseerr.svg
         url: http://nas6d6246:5055
         preview: true
+        livePreview: true
       - name: Tautulli
         subtitle: Statistics
         tags: [tautulli, stats]
         icon: /icons/tautulli.svg
         url: http://nas6d6246:8181
         preview: true
+        livePreview: true
 
   - name: Indexers
     icon: '📡'
@@ -51,24 +54,28 @@ groups:
         icon: /icons/sonarr.svg
         url: http://nas6d6246:8989
         preview: true
+        livePreview: true
       - name: Radarr
         subtitle: Movies
         tags: [radarr, movies]
         icon: /icons/radarr.svg
         url: http://nas6d6246:7878
         preview: true
+        livePreview: true
       - name: Prowlarr
         subtitle: Parent indexer
         tags: [prowlarr]
         icon: /icons/prowlarr.svg
         url: http://nas6d6246:9696
         preview: true
+        livePreview: true
       - name: Bazarr
         subtitle: Subtitles
         tags: [bazarr, subtitles]
         icon: /icons/bazarr.svg
         url: http://nas6d6246:6767
         preview: true
+        livePreview: true
 
   - name: Downloaders
     icon: '⬇️'

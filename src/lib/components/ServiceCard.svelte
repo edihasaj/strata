@@ -19,9 +19,54 @@
 
 	const isImage = $derived(!!item.icon && /^(https?:)?\/|\.(svg|png|jpe?g|webp|gif|ico)$/i.test(item.icon));
 	const emoji = $derived(!isImage ? (item.icon ?? item.name.slice(0, 1)) : '');
+
+	// Inline live preview: only mount the iframe once the card scrolls into view,
+	// so a wall of cards doesn't fire dozens of requests at load.
+	let cardEl: HTMLElement;
+	let inView = $state(false);
+	let frameLoaded = $state(false);
+
+	$effect(() => {
+		if (!item.livePreview || !cardEl || inView) return;
+		const io = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((e) => e.isIntersecting)) {
+					inView = true;
+					io.disconnect();
+				}
+			},
+			{ rootMargin: '200px' }
+		);
+		io.observe(cardEl);
+		return () => io.disconnect();
+	});
 </script>
 
-<article class="card" {style}>
+<article class="card" class:has-live={item.livePreview} bind:this={cardEl} {style}>
+	{#if item.livePreview}
+		<a
+			class="live"
+			href={item.url}
+			target={item.target ?? '_self'}
+			rel="noopener"
+			aria-label="{item.name} live preview"
+			class:ready={frameLoaded}
+		>
+			{#if inView}
+				<iframe
+					title="{item.name} preview"
+					src={item.url}
+					scrolling="no"
+					tabindex="-1"
+					aria-hidden="true"
+					loading="lazy"
+					onload={() => (frameLoaded = true)}
+				></iframe>
+			{/if}
+			{#if !frameLoaded}<span class="live-spin"></span>{/if}
+			<span class="live-fade"></span>
+		</a>
+	{/if}
 	<a class="hit" href={item.url} target={item.target ?? '_self'} rel="noopener" aria-label={item.name}>
 		<div class="icon" class:emoji={!isImage}>
 			{#if isImage}
@@ -83,6 +128,63 @@
 			0 12px 30px -12px var(--shadow),
 			0 0 0 1px var(--glow),
 			0 8px 40px -20px var(--glow);
+	}
+	.card.has-live {
+		overflow: hidden;
+	}
+
+	/* ---- inline live preview ---- */
+	.live {
+		position: relative;
+		display: block;
+		height: 138px;
+		overflow: hidden;
+		background: var(--bg-elev-2);
+		border-bottom: 1px solid var(--border);
+	}
+	.live iframe {
+		position: absolute;
+		inset: 0;
+		/* Render the site at ~4x the card width (desktop layout) then scale it
+		   down to fit, so the card shows a real, legible thumbnail. */
+		width: 400%;
+		height: 400%;
+		border: 0;
+		transform: scale(0.25);
+		transform-origin: 0 0;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.4s ease;
+		background: #fff;
+	}
+	.live.ready iframe {
+		opacity: 1;
+	}
+	.live-fade {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background: linear-gradient(180deg, transparent 55%, color-mix(in srgb, var(--card) 55%, transparent));
+	}
+	.card:hover .live iframe {
+		transform: scale(0.26);
+	}
+	.live-spin {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 20px;
+		height: 20px;
+		margin: -10px 0 0 -10px;
+		border-radius: 50%;
+		border: 2px solid var(--border-strong);
+		border-top-color: var(--accent);
+		animation: spin 0.8s linear infinite;
+	}
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
 	}
 	.hit {
 		display: flex;

@@ -26,6 +26,7 @@ things a homelab actually wants day to day:
 
 - 🟢 **Live status** — the server probes every service and shows up / down **plus latency**, refreshed on an interval. Reachability, not a strict `2xx`, so apps that answer `401`/`302` at the root still read as online.
 - 👁️ **Live preview** — click the eye on any card to load the real app in an in-page modal. No tab-juggling.
+- 🖼️ **Inline live previews** — opt a service into `livePreview` and its card becomes a live, scaled-down window into the app (lazy-loaded as it scrolls into view).
 - 🔍 **Instant search** — press `/` and filter by name, subtitle, or tag.
 - 📱 **Mobile-first** — a responsive grid that actually works on a phone.
 - 🎨 **Distinctive by default** — committed palette, real typography (Space Grotesk + Inter), depth, and motion. Accent colors are yours to set.

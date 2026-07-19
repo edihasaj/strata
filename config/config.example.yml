@@ -26,7 +26,9 @@ groups:
         url: http://localhost:8096
         icon: /icons/jellyfin.svg # image path, or an emoji
         tags: [media, video] # searchable
-        preview: true # show the live-preview iframe button
+        preview: true # show the click-to-open live-preview modal
+        livePreview: true # embed a live, scaled-down preview inside the card itself
+        #                   (opt-in; some apps block iframe embedding — turn off if blank)
         # health: http://localhost:8096/health   # optional probe override
 
   - name: System

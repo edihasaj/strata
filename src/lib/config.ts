@@ -11,8 +11,10 @@ export interface ServiceItem {
 	/** Path to an icon image, or a single emoji. */
 	icon?: string;
 	tags?: string[];
-	/** Whether the live-preview iframe is offered. Default true. */
+	/** Whether the click-to-open live-preview modal is offered. Default true. */
 	preview?: boolean;
+	/** Render a live, scaled-down preview of the site inside the card itself. Default false. */
+	livePreview?: boolean;
 	target?: string;
 }
 
@@ -69,6 +71,7 @@ export async function loadConfig(): Promise<DashboardConfig> {
 			icon: it.icon ?? (it as ServiceItem & { logo?: string }).logo,
 			tags: normalizeTags(it.tags ?? (it as ServiceItem & { tag?: string }).tag),
 			preview: it.preview ?? true,
+			livePreview: it.livePreview ?? false,
 			target: it.target
 		}))
 	}));
