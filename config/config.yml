@@ -102,6 +102,13 @@ groups:
         icon: /icons/home-assistant.svg
         url: http://nas6d6246:8123/
         preview: true
+      - name: Calbraid
+        subtitle: Unified calendar planning
+        tags: [calendar, calbraid, office, planning]
+        icon: '🗓️'
+        url: https://calendar.applifyer.com/
+        health: https://calendar.applifyer.com/api/health
+        preview: false
       - name: AdGuard Home
         subtitle: DNS & ad-block
         tags: [adguard, dns]
@@ -118,15 +125,3 @@ groups:
         icon: /icons/qnap.png
         url: http://nas6d6246:8080
         preview: false
-      - name: MovieMatch
-        subtitle: Find a match
-        tags: [moviematch]
-        icon: '🍿'
-        url: http://nas6d6246:8000
-        preview: true
-      - name: xTeVe
-        subtitle: IPTV tuner
-        tags: [xteve, iptv]
-        icon: /icons/xteve.png
-        url: http://nas6d6246:34400
-        preview: true
