@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
-import { loadConfig, probeTargets } from '$lib/config';
-import { probe, type Probe } from '$lib/server/health';
+import { loadConfig } from '$lib/config';
+import { probe, probeTargets, type Probe } from '$lib/server/health';
 import type { RequestHandler } from './$types';
 
 /**

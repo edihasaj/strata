@@ -79,7 +79,7 @@
 		<div class="meta">
 			<div class="top">
 				<h3>{item.name}</h3>
-				<StatusDot {probe} {loading} />
+				{#if item.health !== false}<StatusDot {probe} {loading} />{/if}
 			</div>
 			{#if item.subtitle}<p class="sub">{item.subtitle}</p>{/if}
 			<div class="foot">

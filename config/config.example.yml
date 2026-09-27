@@ -30,6 +30,7 @@ groups:
         livePreview: true # embed a live, scaled-down preview inside the card itself
         #                   (opt-in; some apps block iframe embedding — turn off if blank)
         # health: http://localhost:8096/health   # optional probe override
+        # health: false                          # or skip probing (host can't reach it)
 
   - name: System
     icon: '🗄️'

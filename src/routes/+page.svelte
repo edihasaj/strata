@@ -151,7 +151,7 @@
 					{#each group.items as item, i (item.name)}
 						<ServiceCard
 							{item}
-							probe={health.get(item.health ?? item.url)}
+							probe={item.health === false ? undefined : health.get(item.health ?? item.url)}
 							loading={health.loading}
 							style="animation-delay: {Math.min(i * 40, 400)}ms"
 							onpreview={(it) => (preview = it)}

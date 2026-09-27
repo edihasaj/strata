@@ -6,8 +6,11 @@ export interface ServiceItem {
 	name: string;
 	subtitle?: string;
 	url: string;
-	/** URL probed for health; defaults to `url`. */
-	health?: string;
+	/**
+	 * URL probed for health; defaults to `url`. `false` skips probing, for a
+	 * service the dashboard host can't reach even though browsers can.
+	 */
+	health?: string | false;
 	/** Path to an icon image, or a single emoji. */
 	icon?: string;
 	tags?: string[];
@@ -94,19 +97,4 @@ function normalizeTags(tags: unknown): string[] {
 	if (!tags) return [];
 	if (Array.isArray(tags)) return tags.map(String);
 	return [String(tags)];
-}
-
-/** Flat list of every probe target, deduped by URL. */
-export function probeTargets(cfg: DashboardConfig): { name: string; url: string }[] {
-	const seen = new Set<string>();
-	const out: { name: string; url: string }[] = [];
-	for (const g of cfg.groups) {
-		for (const it of g.items) {
-			const url = it.health ?? it.url;
-			if (seen.has(url)) continue;
-			seen.add(url);
-			out.push({ name: it.name, url });
-		}
-	}
-	return out;
 }

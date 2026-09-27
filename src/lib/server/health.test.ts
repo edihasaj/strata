@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { after, before, test } from 'node:test';
-import { probe } from './health.ts';
+import type { DashboardConfig } from '$lib/config';
+import { probe, probeTargets } from './health.ts';
 
 let server: Server;
 let base: string;
@@ -76,4 +77,23 @@ test('no response within the timeout reports timeout', async () => {
 	const p = await probe(`${base}/hang`, 300, 0);
 	assert.equal(p.status, 'down');
 	assert.equal(p.reason, 'timeout');
+});
+
+test('probeTargets skips health: false and prefers the health override', () => {
+	const cfg = {
+		groups: [
+			{
+				name: 'g',
+				items: [
+					{ name: 'a', url: 'https://a/' },
+					{ name: 'b', url: 'https://b/', health: 'https://b/healthz' },
+					{ name: 'c', url: 'https://c/', health: false }
+				]
+			}
+		]
+	} as unknown as DashboardConfig;
+	assert.deepEqual(
+		probeTargets(cfg).map((t) => t.url),
+		['https://a/', 'https://b/healthz']
+	);
 });

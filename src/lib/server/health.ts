@@ -1,3 +1,5 @@
+import type { DashboardConfig } from '$lib/config';
+
 export type Status = 'up' | 'down';
 
 /** Why a probe is down, so a broken resolver doesn't look like a dead service. */
@@ -91,4 +93,20 @@ export function classify(err: unknown, signal?: AbortSignal): DownReason {
 function strip(e: CacheEntry): Probe {
 	const { expires: _expires, ...rest } = e;
 	return rest;
+}
+
+/** Flat list of every probe target, deduped by URL. */
+export function probeTargets(cfg: DashboardConfig): { name: string; url: string }[] {
+	const seen = new Set<string>();
+	const out: { name: string; url: string }[] = [];
+	for (const g of cfg.groups) {
+		for (const it of g.items) {
+			if (it.health === false) continue;
+			const url = it.health ?? it.url;
+			if (seen.has(url)) continue;
+			seen.add(url);
+			out.push({ name: it.name, url });
+		}
+	}
+	return out;
 }

@@ -97,7 +97,7 @@ groups:
         icon: /icons/jellyfin.svg   # image path OR an emoji
         tags: [media, video]        # searchable
         preview: true               # show the live-preview button
-        # health: http://localhost:8096/health   # optional probe override
+        # health: http://localhost:8096/health   # optional probe override; false = don't probe
 ```
 
 See [`config/config.example.yml`](config/config.example.yml) for the fully
