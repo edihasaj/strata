@@ -24,7 +24,7 @@ responding, and lets you peek inside any app without leaving the page.
 the part that makes Homer pleasant — **one YAML file, no database** — and adds the
 things a homelab actually wants day to day:
 
-- 🟢 **Live status** — the server probes every service and shows up / down **plus latency**, refreshed on an interval. Reachability, not a strict `2xx`, so apps that answer `401`/`302` at the root still read as online.
+- 🟢 **Live status** — the server probes every service and shows up / down **plus latency**, refreshed on an interval. Reachability, not a strict `2xx`, so apps that answer `401`/`302` at the root still read as online; a `5xx` or no answer reads as down, with the reason.
 - 👁️ **Live preview** — click the eye on any card to load the real app in an in-page modal. No tab-juggling.
 - 🖼️ **Inline live previews** — opt a service into `livePreview` and its card becomes a live, scaled-down window into the app (lazy-loaded as it scrolls into view).
 - 🔍 **Instant search** — press `/` and filter by name, subtitle, or tag.
@@ -119,8 +119,21 @@ make it yours. Drop your own `logo.png` into `static/` (or mount it) and set
 
 The browser can't probe internal hosts (CORS, private IPs), so Strata does it
 **server-side**: `GET /api/health` fans out a short-timeout `HEAD` (falling back
-to `GET`) to every service and returns a `{ url: { status, latency, code } }`
+to `GET`) to every service and returns a `{ url: { status, latency, code, reason } }`
 map, cached briefly. The client polls it and pauses while the tab is hidden.
+
+Any response below `500` counts as up. A `5xx` (say, a proxy's `502` when the
+app behind it has stopped) counts as down. When a probe is down, `reason` says
+why: `http` (with the `code`), `dns`, `refused`, `timeout`, `tls`, or `network`.
+The card shows it too, e.g. *offline · DNS lookup failed*.
+
+`dns` on every tailnet card usually means the container can't use the host's
+resolver, not that the services are down. Docker writes its own
+`/etc/resolv.conf` even with `network_mode: host`, and some NAS engines force a
+`--dns` of their own. If you probe Tailscale MagicDNS names (`*.ts.net`), set
+`dns: [100.100.100.100]` on the service. Don't add a second nameserver as a
+fallback: the image is Alpine, whose resolver queries every nameserver at once
+and keeps the first answer, so a fast "no such host" from the other one wins.
 
 ## Tech
 

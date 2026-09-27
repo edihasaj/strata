@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Probe } from '$lib/server/health';
+	import { downLabel } from '$lib/probe';
 
 	let { probe, loading = false }: { probe?: Probe; loading?: boolean } = $props();
 
@@ -9,8 +10,8 @@
 			? probe?.latency != null
 				? `Online · ${probe.latency} ms`
 				: 'Online'
-			: state === 'down'
-				? 'Offline'
+			: state === 'down' && probe
+				? `Offline · ${downLabel(probe)}`
 				: 'Checking…'
 	);
 </script>

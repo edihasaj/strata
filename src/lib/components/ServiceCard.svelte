@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ServiceItem } from '$lib/config';
 	import type { Probe } from '$lib/server/health';
+	import { downLabel } from '$lib/probe';
 	import StatusDot from './StatusDot.svelte';
 
 	let {
@@ -85,7 +86,7 @@
 				{#if probe?.status === 'up' && probe.latency != null}
 					<span class="lat">{probe.latency} ms</span>
 				{:else if probe?.status === 'down'}
-					<span class="lat lat--down">offline</span>
+					<span class="lat lat--down">offline · {downLabel(probe)}</span>
 				{/if}
 			</div>
 		</div>
