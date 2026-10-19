@@ -149,3 +149,13 @@ dependencies beyond the framework. Fonts are self-hosted (offline-friendly).
 ## License
 
 [MIT](LICENSE) © Edi Hasaj
+
+### Private Cloudflare health targets
+
+The server health endpoint can authenticate checks with the private environment
+variables `STRATA_CF_ACCESS_CLIENT_ID`, `STRATA_CF_ACCESS_CLIENT_SECRET` and
+`STRATA_CF_ACCESS_ORIGINS` (a JSON array of five exact HTTPS origins). Keep these
+values outside YAML: dashboard configuration is sent to the browser. Credentials
+are attached only to admitted origins, redirects are not followed, and these
+checks require 2xx responses. Invalid protection settings fail closed. Other
+public checks retain their existing reachability behavior.

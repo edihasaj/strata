@@ -20,6 +20,17 @@ interface CacheEntry extends Probe {
 	expires: number;
 }
 
+/** Server-only fetch settings. They are never included in the returned Probe. */
+export interface ProbeOptions {
+	headers?: HeadersInit;
+	/** Keeps separately-authorized probes out of each other's cache/in-flight work. */
+	cacheScope?: string;
+	/** Return down without making an unauthenticated request. */
+	failClosed?: boolean;
+	/** Protected services need a successful authentication response, not reachability alone. */
+	requireSuccess?: boolean;
+}
+
 const cache = new Map<string, CacheEntry>();
 const inflight = new Map<string, Promise<Probe>>();
 
@@ -30,24 +41,34 @@ const inflight = new Map<string, Promise<Probe>>();
  * down. Results are cached briefly and concurrent callers share one in-flight
  * request.
  */
-export async function probe(url: string, timeout: number, ttl = 8000): Promise<Probe> {
+export async function probe(
+	url: string,
+	timeout: number,
+	ttl = 8000,
+	options: ProbeOptions = {}
+): Promise<Probe> {
+	if (options.failClosed) {
+		return { status: 'down', reason: 'network', checkedAt: Date.now() };
+	}
+
+	const cacheKey = `${options.cacheScope ?? 'public'}\0${url}`;
 	const now = Date.now();
-	const hit = cache.get(url);
+	const hit = cache.get(cacheKey);
 	if (hit && hit.expires > now) return strip(hit);
 
-	const existing = inflight.get(url);
+	const existing = inflight.get(cacheKey);
 	if (existing) return existing;
 
-	const run = doProbe(url, timeout).then((res) => {
-		cache.set(url, { ...res, expires: Date.now() + ttl });
-		inflight.delete(url);
+	const run = doProbe(url, timeout, options).then((res) => {
+		cache.set(cacheKey, { ...res, expires: Date.now() + ttl });
+		inflight.delete(cacheKey);
 		return res;
 	});
-	inflight.set(url, run);
+	inflight.set(cacheKey, run);
 	return run;
 }
 
-async function doProbe(url: string, timeout: number): Promise<Probe> {
+async function doProbe(url: string, timeout: number, options: ProbeOptions): Promise<Probe> {
 	const started = Date.now();
 	const ctrl = new AbortController();
 	const timer = setTimeout(() => ctrl.abort(), timeout);
@@ -56,16 +77,26 @@ async function doProbe(url: string, timeout: number): Promise<Probe> {
 		// back to a GET we don't read.
 		let res: Response | undefined;
 		try {
-			res = await fetch(url, { method: 'HEAD', signal: ctrl.signal, redirect: 'manual' });
+			res = await fetch(url, {
+				method: 'HEAD',
+				headers: options.headers,
+				signal: ctrl.signal,
+				redirect: 'manual'
+			});
 		} catch {
 			// Retried below; a GET failure carries the same cause.
 		}
 		if (!res || res.status === 405 || res.status >= 500) {
-			res = await fetch(url, { method: 'GET', signal: ctrl.signal, redirect: 'manual' });
+			res = await fetch(url, {
+				method: 'GET',
+				headers: options.headers,
+				signal: ctrl.signal,
+				redirect: 'manual'
+			});
 		}
 		void res.body?.cancel();
 		const latency = Date.now() - started;
-		if (res.status >= 500) {
+		if (res.status >= 500 || (options.requireSuccess && (res.status < 200 || res.status >= 300))) {
 			return { status: 'down', reason: 'http', code: res.status, latency, checkedAt: Date.now() };
 		}
 		return { status: 'up', latency, code: res.status, checkedAt: Date.now() };
