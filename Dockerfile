@@ -1,5 +1,5 @@
 # --- build stage ---
-FROM node:24-alpine AS build
+FROM node:24.22.1-alpine AS build
 WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
@@ -8,7 +8,7 @@ COPY . .
 RUN pnpm run build && pnpm prune --prod
 
 # --- runtime stage ---
-FROM node:24-alpine
+FROM node:24.22.1-alpine
 WORKDIR /app
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \

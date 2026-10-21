@@ -159,3 +159,7 @@ values outside YAML: dashboard configuration is sent to the browser. Credentials
 are attached only to admitted origins, redirects are not followed, and these
 checks require 2xx responses. Invalid protection settings fail closed. Other
 public checks retain their existing reachability behavior.
+
+## October 2026 Node security maintenance
+
+Container builds and runtime use Node.js 24.22.1 for the October 21, 2026 security release.
