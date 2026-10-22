@@ -163,3 +163,6 @@ public checks retain their existing reachability behavior.
 ## October 2026 Node security maintenance
 
 Container builds and runtime use Node.js 24.22.1 for the October 21, 2026 security release.
+
+The final serving image removes unused global npm and npx after the build.
+The build stage retains its package managers, and startup continues to run Node directly.

@@ -9,6 +9,10 @@ RUN pnpm run build && pnpm prune --prod
 
 # --- runtime stage ---
 FROM node:24.22.1-alpine
+# The serving process runs Node directly; package installers remain build-only.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx \
+    && test ! -e /usr/local/lib/node_modules/npm \
+    && test ! -e /usr/local/bin/npm && test ! -e /usr/local/bin/npx
 WORKDIR /app
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
